@@ -67,3 +67,80 @@ whose ContactTitle is not Marketing Manager.
 
 SELECT SupplierId, ContactName, ContactTitle FROM Suppliers WHERE  NOT ContactTitle = 'Marketing Manger';
 
+/*
+7. Products with “queso” in ProductName
+In the products table, we’d like to see the ProductID
+and ProductName for those products where the
+ProductName includes the string “queso”. 
+*/
+
+note:https://learn.microsoft.com/en-us/sql/t-sql/language-elements/like-transact-sql?view=sql-server-ver17#:~:text=WHERE%20title%20LIKE%20%27-,%25computer%25%27,-finds%20all%20book
+
+SELECT ProductID, ProductName
+  FROM Products WHERE ProductName LIKE '%queso%';
+
+/*
+8. Orders shipping to France or Belgium
+Looking at the Orders table, there’s a field called
+ShipCountry. Write a query that shows the OrderID,
+CustomerID, and ShipCountry for the orders where
+the ShipCountry is either France or Belgium.
+*/ 
+-- SELECT *FROM Orders WHERE ShipCountry = 'Belgium';
+-- Try different countries such USA, Germany, Canada, ect. 
+SELECT OrderID,CustomerID, ShipCountry  FROM Orders
+WHERE ShipCountry = 'France' OR ShipCountry = 'Belgium';
+-- Note also use IN instead of OR. 
+-- WHERE ShipCountry IN ('France','Belgium');
+/*
+9. Orders shipping to any country in Latin
+America
+Now, instead of just wanting to return all the orders
+from France of Belgium, we want to show all the
+orders from any Latin American country. But we
+don’t have a list of Latin American countries in a
+table in the Northwind database. So, we’re going to
+just use this list of Latin American countries that
+happen to be in the Orders table:
+Brazil
+Mexico
+Argentina
+Venezuela
+It doesn’t make sense to use multiple Or statements
+anymore, it would get too convoluted. Use the In
+statement.
+*/
+
+SELECT OrderID,CustomerID, ShipCountry  FROM Orders
+WHERE ShipCountry IN ( 'Brazil','Mexico','Argentina', 'Venezuela');
+
+/*
+10. Employees, in order of age
+For all the employees in the Employees table, show
+the FirstName, LastName, Title, and BirthDate.
+Order the results by BirthDate, so we have the oldest
+employees first.
+*/
+
+SELECT FirstName, LastName, Title,BirthDate FROM Employees ORDER BY BirthDate ASC;
+
+/*
+11. Showing only the Date with a
+DateTime field
+In the output of the query above, showing the
+Employees in order of BirthDate, we see the time of
+the BirthDate field, which we don’t want. Show only
+the date portion of the BirthDate field.
+*/
+--note https://learn.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver17#:~:text=I.%20Convert%20date%20and%20time%20data%20types
+
+SELECT FirstName, LastName, Title,CAST(BirthDate AS Date ) AS BirthDate FROM Employees ORDER BY BirthDate ASC;
+
+/*
+12. Employees full name
+Show the FirstName and LastName columns from
+the Employees table, and then create a new column
+called FullName, showing FirstName and LastName
+joined together in one column, with a space inbetween.
+*/
+
