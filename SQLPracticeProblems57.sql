@@ -224,3 +224,9 @@ Here’s a data model of the relationship between
 Products and Suppliers.
 */
 
+SELECT * FROM Products;
+SELECT * FROM Suppliers;
+
+SELECT P.ProductID, P.ProductName, S.CompanyName 
+FROM Products AS P JOIN Suppliers AS S ON P.SupplierID = S.SupplierID ORDER BY P.ProductID;
+
