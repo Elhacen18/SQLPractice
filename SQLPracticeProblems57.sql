@@ -65,7 +65,7 @@ ContactName, and ContactTitle for those Suppliers
 whose ContactTitle is not Marketing Manager.
 */
 
-SELECT SupplierId, ContactName, ContactTitle FROM Suppliers WHERE  NOT ContactTitle = 'Marketing Manger';
+SELECT SupplierId, ContactName, ContactTitle FROM Suppliers WHERE  NOT ContactTitle = 'Marketing Manager';
 
 /*
 7. Products with “queso” in ProductName
@@ -122,7 +122,7 @@ Order the results by BirthDate, so we have the oldest
 employees first.
 */
 
-SELECT FirstName, LastName, Title,BirthDate FROM Employees ORDER BY BirthDate ASC;
+SELECT FirstName, LastName, Title,BirthDate FROM Employees ORDER BY BirthDate;
 
 /*
 11. Showing only the Date with a
@@ -135,6 +135,8 @@ the date portion of the BirthDate field.
 --note https://learn.microsoft.com/en-us/sql/t-sql/functions/cast-and-convert-transact-sql?view=sql-server-ver17#:~:text=I.%20Convert%20date%20and%20time%20data%20types
 
 SELECT FirstName, LastName, Title,CAST(BirthDate AS Date ) AS BirthDate FROM Employees ORDER BY BirthDate ASC;
+-- or
+SELECT FirstName, LastName, Title,BirthDate = convert(date,BirthDate) FROM Employees ORDER BY BirthDate ASC;
 
 /*
 12. Employees full name
@@ -142,5 +144,83 @@ Show the FirstName and LastName columns from
 the Employees table, and then create a new column
 called FullName, showing FirstName and LastName
 joined together in one column, with a space inbetween.
+*/
+
+-- https://learn.microsoft.com/en-us/sql/t-sql/functions/concat-transact-sql?view=sql-server-ver17#:~:text=To%20add%20a%20separating%20value%20during%20concatenation%2C%20use%20CONCAT_WS.
+
+
+-- SELECT FirstName + ' ' + LastName as FullName FROM Employees;
+-- SELECT FirstName + LastName as FullName FROM Employees;
+
+SELECT CONCAT_WS(' ', FirstName , LastName) as FullName FROM Employees;
+-- OR 
+SELECT [Full name] = concat(FirstName, ' ', LastName) FROM  Employees;
+/*
+13. OrderDetails amount per line item
+In the OrderDetails table, we have the fields
+UnitPrice and Quantity. Create a new field,
+TotalPrice, that multiplies these two together. We’ll
+ignore the Discount field for now.
+In addition, show the OrderID, ProductID, UnitPrice,
+and Quantity. Order by OrderID and ProductID.
+
+*/
+
+SELECT ProductID, UnitPrice, Quantity, UnitPrice* Quantity  as TotalPrice
+FROM [Order Details] ORDER BY OrderID,ProductID  ;
+
+/*
+14. How many customers?
+How many customers do we have in the Customers
+table? Show one value only, and don’t rely on getting
+the recordcount at the end of a resultset
+*/
+
+SELECT COUNT(*) FROM Customers;
+
+
+/*
+15. When was the first order?
+Show the date of the first order ever made in the
+Orders table.*/
+
+
+SELECT TOP(1) OrderDate AS [First Order] FROM orders ;
+SELECT FirstOrder = MIN(OrderDate) FROM orders;
+
+/*16. Countries where there are customers
+Show a list of countries where the Northwind
+company has customers.*/
+
+SELECT Country FROM customers GROUP BY Country;
+
+/*
+17. Contact titles for customers
+Show a list of all the different values in the
+Customers table for ContactTitles. Also include a
+count for each ContactTitle.
+This is similar in concept to the previous question
+“Countries where there are customers”, except we
+now want a count for each ContactTitle.
+
+*/
+
+
+SELECT ContactTitle, COUNT(*) AS TotalContactTitle FROM customers GROUP BY ContactTitle ORDER BY TotalContactTitle DESC; 
+
+SELECT * FROM customers;
+
+/*
+18. Products with associated supplier
+names
+We’d like to show, for each product, the associated
+Supplier. Show the ProductID, ProductName, and the
+CompanyName of the Supplier. Sort by ProductID.
+This question will introduce what may be a new
+concept, the Join clause in SQL. The Join clause is
+used to join two or more relational database tables
+together in a logical way.
+Here’s a data model of the relationship between
+Products and Suppliers.
 */
 
