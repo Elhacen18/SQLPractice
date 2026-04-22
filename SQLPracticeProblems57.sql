@@ -74,7 +74,7 @@ and ProductName for those products where the
 ProductName includes the string “queso”. 
 */
 
-note:https://learn.microsoft.com/en-us/sql/t-sql/language-elements/like-transact-sql?view=sql-server-ver17#:~:text=WHERE%20title%20LIKE%20%27-,%25computer%25%27,-finds%20all%20book
+-- note:https://learn.microsoft.com/en-us/sql/t-sql/language-elements/like-transact-sql?view=sql-server-ver17#:~:text=WHERE%20title%20LIKE%20%27-,%25computer%25%27,-finds%20all%20book
 
 SELECT ProductID, ProductName
   FROM Products WHERE ProductName LIKE '%queso%';
@@ -230,3 +230,92 @@ SELECT * FROM Suppliers;
 SELECT P.ProductID, P.ProductName, S.CompanyName 
 FROM Products AS P JOIN Suppliers AS S ON P.SupplierID = S.SupplierID ORDER BY P.ProductID;
 
+
+
+/*
+19. Orders and the Shipper that was used
+We’d like to show a list of the Orders that were
+made, including the Shipper that was used. Show the
+OrderID, OrderDate (date only), and CompanyName
+of the Shipper, and sort by OrderID.
+In order to not show all the orders (there’s more than
+800), show only those rows with an OrderID of less
+than 10300.
+
+*/
+
+
+SELECT O.OrderID, CAST(O.OrderDate AS Date ) AS OrderDate, S.companyName FROM Orders AS O
+JOIN  shippers AS S ON  O.ShipVia = S.ShipperID WHERE O.OrderID <10300  ORDER BY O.OrderID; 
+
+ 
+ /*
+ Congratulations! 
+ You've completed the introductory
+ problems 
+ */
+
+ /*
+ 20. Categories, and the total products in
+each category
+For this problem, we’d like to see the total number of
+products in each category. Sort the results by the total
+number of products, in descending order.
+*/
+SELECT Categories.CategoryName, COUNT(*) AS totalProducts
+FROM Categories JOIN Products ON Products.CategoryID = Categories.CategoryID
+GROUP BY CategoryName ORDER BY COUNT(*) DESC;
+
+/*
+21. Total customers per country/city
+In the Customers table, show the total number of
+customers per Country and City.
+*/
+
+SELECT Country, City, COUNT(*) AS TotalCustomer FROM Customers GROUP BY Country, city ORDER BY COUNT(*) DESC;
+
+
+/*
+22. Products that need reordering
+What products do we have in our inventory that
+should be reordered? For now, just use the fields
+UnitsInStock and ReorderLevel, where UnitsInStock
+is less than the ReorderLevel, ignoring the fields
+UnitsOnOrder and Discontinued.
+Order the results by ProductID.
+*/
+
+SELECT ProductID,ProductName,UnitsInStock,ReorderLevel  FROM Products 
+WHERE UnitsInStock < ReorderLevel ORDER BY ProductID;
+
+/*
+23. Products that need reordering,
+continued
+Now we need to incorporate these fields—
+UnitsInStock, UnitsOnOrder, ReorderLevel,
+Discontinued—into our calculation. We’ll define
+“products that need reordering” with the following:
+UnitsInStock plus UnitsOnOrder are less than
+or equal to ReorderLevel
+The Discontinued flag is false (0).
+*/
+SELECT ProductID
+,ProductName
+,UnitsInStock
+,UnitsOnOrder
+,ReorderLevel
+,Discontinued  FROM Products 
+WHERE UnitsInStock + UnitsOnOrder <= ReorderLevel AND Discontinued = 0 ORDER BY ProductID;
+
+
+/*
+24. Customer list by region
+A salesperson for Northwind is going on a business
+trip to visit customers, and would like to see a list of
+all customers, sorted by region, alphabetically.
+However, he wants the customers with no region
+(null in the Region field) to be at the end, instead of
+at the top, where you’d normally find the null values.
+Within the same region, companies should be sorted
+by CustomerID.
+*/
