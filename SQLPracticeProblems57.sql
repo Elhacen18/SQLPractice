@@ -319,3 +319,89 @@ at the top, where you’d normally find the null values.
 Within the same region, companies should be sorted
 by CustomerID.
 */
+
+
+SELECT CustomerID, CompanyName, Region,RegionOrder=Case
+when Region is null then 1
+else 0
+End 
+FROM Customers 
+ORDER BY 
+RegionOrder,Region,CustomerID ;
+
+-- Study the question above
+
+Select
+CustomerID
+,CompanyName
+,Region
+From Customers
+Order By
+Case
+when Region is null then 1
+else 0
+End
+,Region
+,CustomerID
+
+/*
+25. High freight charges
+Some of the countries we ship to have very high
+freight charges. We'd like to investigate some more
+shipping options for our customers, to be able to offer
+them lower freight charges. Return the three ship
+countries with the highest average freight overall, in
+descending order by average freight.
+*/
+
+
+
+SELECT TOP 3 ShipCountry, AVG(Freight) AS AverageFreight FROM Orders 
+GROUP BY ShipCountry ORDER BY AverageFreight DESC ;
+
+/*
+Note: This dataset does not have year 2015. 
+Use 1997 instead of 2015
+26. High freight charges - 2015
+We're continuing on the question above on high
+freight charges. Now, instead of using all the orders
+we have, we only want to see orders from the year
+2015. 
+*/
+
+SELECT top 3 ShipCountry, AVG(Freight) AS AverageFreight FROM Orders 
+WHERE OrderDate >= '19970101' AND OrderDate < '19980101'
+GROUP BY ShipCountry ORDER BY AverageFreight DESC ;
+/*SELECT AVG(Freight) FROM Orders WHERE ShipCountry = 'France' 
+AND  OrderDate >= '01/01/1997' AND OrderDate < '01/01/1998' ;
+*/
+/*
+Again: Use 1997
+27. High freight charges with between
+Another (incorrect) answer to the problem above is
+this:
+Select Top 3
+ShipCountry
+,AverageFreight = avg(freight)
+From Orders
+Where
+OrderDate between '1/1/2015' and '12/31/2015'
+Group By ShipCountry
+Order By AverageFreight desc;
+Notice when you run this, it gives Sweden as the
+ShipCountry with the third highest freight charges.
+However, this is wrong - it should be France.
+What is the OrderID of the order that the (incorrect)
+answer above is missing?
+*/
+--SELECT * FROM Orders WHERE YEAR(OrderDate) = '1997';
+
+Select Top 3
+ShipCountry
+,AverageFreight = avg(freight)
+From Orders
+Where
+OrderDate between '1/1/1997' and '12/31/1998'
+Group By ShipCountry
+Order By AverageFreight desc;
+select * from orders order by OrderDate
