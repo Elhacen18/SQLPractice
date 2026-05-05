@@ -405,3 +405,4 @@ OrderDate between '1/1/1997' and '12/31/1998'
 Group By ShipCountry
 Order By AverageFreight desc;
 select * from orders order by OrderDate
+-- 10806 - VICTE - France 
